@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Message</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #fce4ec;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .content.visible {
+            display: flex;
+        }
+
+        img {
+            max-height: 50vh;
+            width: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, p {
+            margin: 20px;
+        }
+
+        h1 {
+            color: #e91e63;
+            font-size: 2.5rem;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            color: #333;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin: 15px 0;
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 1.4;
+                margin: 15px 0;
+                padding: 0 10px;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 10px;
+            }
+
+            .content {
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            /* Adjust floating hearts for mobile */
+            .heart {
+                width: 15px !important;
+            }
+
+            /* Adjust decorative corners for mobile */
+            .decorative-corner {
+                width: 30px;
+                height: 30px;
+            }
+
+            .top-left { top: -15px; left: -15px; }
+            .top-right { top: -15px; right: -15px; }
+            .bottom-left { bottom: -15px; left: -15px; }
+            .bottom-right { bottom: -15px; right: -15px; }
+        }
+
+        /* iPhone SE and smaller devices */
+        @media (max-width: 375px) {
+            .container {
+                padding: 10px;
+                margin: 5px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+                padding: 0 5px;
+            }
+
+            .decorative-corner {
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+        /* Handle landscape orientation */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container {
+                margin: 10px auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            img {
+                max-height: 40vh;
+                object-fit: cover;
+            }
+
+            .floating-hearts {
+                display: none;
+            }
+        }
+
+        /* New decorative styles */
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(233, 30, 99, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 30px;
+            position: relative;
+        }
+
+        .content {
+            border: 2px solid #fce4ec;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .decorative-corner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
+        }
+
+        .top-left { top: -25px; left: -25px; transform: rotate(-45deg); }
+        .top-right { top: -25px; right: -25px; transform: rotate(45deg); }
+        .bottom-left { bottom: -25px; left: -25px; transform: rotate(-135deg); }
+        .bottom-right { bottom: -25px; right: -25px; transform: rotate(135deg); }
+
+        /* Add these new styles */
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-yes {
+            background-color: #e91e63;
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            background-color: #c2185b;
+        }
+
+        .btn-no {
+            background-color: #9e9e9e;
+            color: white;
+            position: relative;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .popup h2 {
+            color: #e91e63;
+            margin: 0;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts">
+        <!-- We'll add hearts with JavaScript -->
+    </div>
+
+    <div class="container">
+        <!-- Decorative Corners -->
+        <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner top-left" alt="">
+        <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner top-right" alt="">
+        <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner bottom-left" alt="">
+        <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner bottom-right" alt="">
+
+        <div class="content" id="content1">
+            <img src="https://media.giphy.com/media/LnKM6jbBenbVXp1qA9/giphy.gif" alt="Love GIF 1">
+            <h1>Hi My Love</h1>
+        </div>
+        <div class="content" id="content2">
+            <img src="https://media.giphy.com/media/l4pTdcifPZLpDjL1e/giphy.gif" alt="Love GIF 2">
+            <p>Every moment spent with you feels like a beautiful dream come true. Your smile brightens my darkest days, and your love fills my heart with endless joy. You are my everything, and I'm grateful to have you in my life.</p>
+        </div>
+        <div class="content" id="content3">
+            <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif" alt="Love GIF 3">
+            <p>I know things aren't that good lately. I know I'm unable to understand your needs, and I'm unable to express everything properly, but even after all these things I want to say that...</p>
+        </div>
+        <div class="content" id="content4">
+            <img src="https://media.giphy.com/media/26BRtW4zppWWjrsPu/giphy.gif" alt="Love GIF 4">
+            <p>I really love you. I'm sorry for not being able to understand you and for making you feel that my efforts are getting less, but trust me baby, I really love you and my efforts aren't decreasing.</p>
+        </div>
+        <div class="content" id="content5">
+            <img src="https://media.giphy.com/media/26BRrIB4ZQoUtZlMA/giphy.gif" alt="Love GIF 5">
+            <p>Can you forgive me?</p>
+            <div class="button-container">
+                <button class="btn btn-yes">Yes</button>
+                <button class="btn btn-no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup" id="lovePopup">
+        <h2>I love you Priyatna ❤️</h2>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contents = document.querySelectorAll('.content');
+            let currentIndex = 0;
+
+            // Button functionality
+            const btnNo = document.querySelector('.btn-no');
+            const btnYes = document.querySelector('.btn-yes');
+            const popup = document.getElementById('lovePopup');
+
+            function moveButton() {
+                const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+                const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+                
+                const safeX = Math.min(Math.max(x, 0), window.innerWidth - btnNo.offsetWidth);
+                const safeY = Math.min(Math.max(y, 0), window.innerHeight - btnNo.offsetHeight);
+                
+                btnNo.style.position = 'fixed';
+                btnNo.style.left = safeX + 'px';
+                btnNo.style.top = safeY + 'px';
+            }
+
+            btnNo.addEventListener('mouseover', moveButton);
+            btnNo.addEventListener('click', moveButton);
+
+            btnYes.addEventListener('click', () => {
+                popup.style.display = 'block';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 3000);
+            });
+
+            // Content transition functionality
+            function showContent(index) {
+                contents.forEach((content, i) => {
+                    content.classList.toggle('visible', i === index);
+                });
+            }
+
+            showContent(currentIndex);
+
+            // Create an interval and store its ID
+            const intervalId = setInterval(() => {
+                // Only proceed if we haven't reached the last section
+                if (currentIndex < contents.length - 1) {
+                    currentIndex++;
+                    showContent(currentIndex);
+                } else {
+                    // Clear the interval when we reach the last section
+                    clearInterval(intervalId);
+                }
+            }, 4000); // Change section every 4 seconds
+        });
+    </script>
+</body>
+</html>
