@@ -63,6 +63,7 @@
             margin: 20px 0;
         }
 
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -147,6 +148,43 @@
 
             .floating-hearts {
                 display: none;
+            }
+        }
+
+        /* Button styles for mobile */
+        @media (max-width: 768px) {
+            .button-container {
+                margin-top: 15px;
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 8px 24px;
+                font-size: 1rem;
+            }
+
+            .popup {
+                padding: 15px 30px;
+            }
+
+            .popup h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Additional improvements for very small screens */
+        @media (max-width: 320px) {
+            .btn {
+                padding: 6px 20px;
+                font-size: 0.9rem;
+            }
+
+            .popup {
+                padding: 10px 20px;
+            }
+
+            .popup h2 {
+                font-size: 1rem;
             }
         }
 
@@ -260,6 +298,86 @@
             margin: 0;
             padding: 10px 0;
         }
+
+        /* Next button styling */
+        .btn-next {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-next::after {
+            content: '→';
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #c2185b;
+        }
+
+        /* Mobile responsiveness for next button */
+        @media (max-width: 768px) {
+            .btn-next {
+                width: 40px;
+                height: 40px;
+                right: 8px;
+            }
+
+            .btn-next::after {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .btn-next {
+                width: 35px;
+                height: 35px;
+                right: 5px;
+            }
+
+            .btn-next::after {
+                font-size: 1rem;
+            }
+        }
+
+        /* Add these styles for the loader */
+        .loader {
+            display: none;
+            width: 48px;
+            height: 48px;
+            border: 5px solid #fff;
+            border-bottom-color: #e91e63;
+            border-radius: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -275,42 +393,58 @@
         <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner bottom-left" alt="">
         <img src="https://raw.githubusercontent.com/twbs/icons/main/icons/heart-fill.svg" class="decorative-corner bottom-right" alt="">
 
-        <div class="content" id="content1">
-            <img src="https://media.giphy.com/media/LnKM6jbBenbVXp1qA9/giphy.gif" alt="Love GIF 1">
+        <div class="content visible" id="content1">
+            <img src="assets/1.jpeg" alt="Cute Love Image 1">
             <h1>Hi My Love</h1>
         </div>
         <div class="content" id="content2">
-            <img src="https://media.giphy.com/media/l4pTdcifPZLpDjL1e/giphy.gif" alt="Love GIF 2">
+            <img src="assets/2.jpeg" alt="Cute Love Image 2">
             <p>Every moment spent with you feels like a beautiful dream come true. Your smile brightens my darkest days, and your love fills my heart with endless joy. You are my everything, and I'm grateful to have you in my life.</p>
         </div>
         <div class="content" id="content3">
-            <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif" alt="Love GIF 3">
+            <img src="assets/3.jpeg" alt="Cute Love Image 3">
             <p>I know things aren't that good lately. I know I'm unable to understand your needs, and I'm unable to express everything properly, but even after all these things I want to say that...</p>
         </div>
         <div class="content" id="content4">
-            <img src="https://media.giphy.com/media/26BRtW4zppWWjrsPu/giphy.gif" alt="Love GIF 4">
+            <img src="assets/5.jpeg" alt="Cute Love Image 4">
             <p>I really love you. I'm sorry for not being able to understand you and for making you feel that my efforts are getting less, but trust me baby, I really love you and my efforts aren't decreasing.</p>
         </div>
         <div class="content" id="content5">
-            <img src="https://media.giphy.com/media/26BRrIB4ZQoUtZlMA/giphy.gif" alt="Love GIF 5">
             <p>Can you forgive me?</p>
             <div class="button-container">
                 <button class="btn btn-yes">Yes</button>
                 <button class="btn btn-no">No</button>
             </div>
         </div>
+        <button class="btn-next"></button>
     </div>
 
     <div class="popup" id="lovePopup">
         <h2>I love you Priyatna ❤️</h2>
     </div>
 
+    <div class="loader" id="loader"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const contents = document.querySelectorAll('.content');
+            const btnNext = document.querySelector('.btn-next');
             let currentIndex = 0;
 
-            // Button functionality
+            function showContent(index) {
+                contents.forEach((content, i) => {
+                    content.classList.toggle('visible', i === index);
+                });
+            }
+
+            btnNext.addEventListener('click', () => {
+                if (currentIndex < contents.length - 1) {
+                    currentIndex++;
+                    showContent(currentIndex);
+                }
+            });
+
+            // Button functionality for "Yes" and "No"
             const btnNo = document.querySelector('.btn-no');
             const btnYes = document.querySelector('.btn-yes');
             const popup = document.getElementById('lovePopup');
@@ -332,31 +466,19 @@
 
             btnYes.addEventListener('click', () => {
                 popup.style.display = 'block';
+                
+                // After 3 seconds, show loader and prepare to open WhatsApp
                 setTimeout(() => {
                     popup.style.display = 'none';
+                    loader.style.display = 'block';
+                    
+                    // After 2 seconds of loading, open WhatsApp
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        window.open('https://wa.me/9064929522', '_blank');
+                    }, 2000);
                 }, 3000);
             });
-
-            // Content transition functionality
-            function showContent(index) {
-                contents.forEach((content, i) => {
-                    content.classList.toggle('visible', i === index);
-                });
-            }
-
-            showContent(currentIndex);
-
-            // Create an interval and store its ID
-            const intervalId = setInterval(() => {
-                // Only proceed if we haven't reached the last section
-                if (currentIndex < contents.length - 1) {
-                    currentIndex++;
-                    showContent(currentIndex);
-                } else {
-                    // Clear the interval when we reach the last section
-                    clearInterval(intervalId);
-                }
-            }, 4000); // Change section every 4 seconds
         });
     </script>
 </body>
